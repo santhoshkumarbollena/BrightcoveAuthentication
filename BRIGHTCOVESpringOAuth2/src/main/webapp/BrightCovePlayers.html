@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app="myModule" ng-controller="myController" >
+<head>
+<meta charset="ISO-8859-1">
+<title>Bright Cove players</title>
+
+        <script src="angular.js"></script>
+         <script type="text/javascript">
+		var app=angular.module("myModule",[]);
+		
+		app.controller("myController",['$scope','$http','$window',function($scope,$http,$window){
+			
+			
+			//$window.alert(Student.Id+"Initial");
+			
+			$scope.demo={"items": {
+				"account_id": "",
+				"id":"",
+				"name":"demo ",
+				"branches":
+					{"preview":{"configuration":{"player":{"template":{"version":"","name":""}},"video_cloud":{"policy_key":""},"compatibility":true},"updated_at":"","template_updated_at":"","preview_url":""},"master":{"configuration":{"compatibility":true,"video_cloud":{"policy_key":""},"player":{"template":{"name":"","version":""}}},"updated_at":"","template_updated_at":"","preview_url":""}},
+					"last_viewed":[],
+					"created_at":"",
+					"url":"",
+				"embed_count":1
+			},
+					"item_count": 0};
+			$scope.players=[];
+			$scope.GetAllPlayerDetails=function(){
+				//var id=Student.Id;
+				//$window.alert(Student.Id);
+				
+	    		$http({
+	    			method :'GET',
+	    			url : 'http://localhost:8080/GetAllPlayers',
+	    			
+	    		}).then(function (response)
+	    				{
+	    			
+	    			$scope.demo=response.data;
+	    			
+	    				});
+	    	}
+			
+		
+			
+			
+			
+			
+		
+	}]);
+
+</script> 
+        
+</head>
+
+<body >
+
+
+      
+
+							<p>{{demo.items.name}}</p>
+							<p>{{demo.item_count}}</p>	
+	<table cellspacing="5" cellpadding="5" border="0" width="650px">
+		<tr>
+			<td>
+				<table cellspacing="5" cellpadding="5" border="1" width="600px" >
+				<tr>
+				<th>Player names</tr>
+				</table>
+
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div style="width:600px; height:400px; overflow:auto;">
+					<table cellspacing="5" cellpadding="5" border="1" width="600px">
+						<tr ng-repeat="player in demo.items">
+							<td>{{player.name}}</td>
+							
+						</tr>
+		
+					</table>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="button" value="Get All players" class="Button" ng-click="GetAllPlayerDetails()">
+			</td>
+		</tr>
+	</table>
+	
+	
+    	</div>
+    
+    </body>
+</body>
+</html>
