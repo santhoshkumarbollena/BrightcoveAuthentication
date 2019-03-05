@@ -15,6 +15,7 @@ import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class ControllerForSecurity {
 	 public String  GetAllPlayers() {
 		 String RESOURCE_URL_TPL ="https://players.api.brightcove.com/v2/accounts/6005208615001/players";
 		 try {
-			 
+			 str="";
 			 AcccesTokenRequest ac=new AcccesTokenRequest();
 			 ac.getAccessTOkenMethod();
 	            String resourceUrl = RESOURCE_URL_TPL.replace(":account-id", ac.ACCOUNT_ID);
@@ -56,10 +57,10 @@ public class ControllerForSecurity {
 		 
 		 return str;
 	}
-	 @GetMapping(value="GetCountryName",produces=MediaType.APPLICATION_JSON_VALUE)
-	 public String getCountryNamesWherevideoBeingWatched() {
+	 @GetMapping(value="Analytics/{Operation}/{InternalOperation}",produces=MediaType.APPLICATION_JSON_VALUE)
+	 public String getCountryNamesWherevideoBeingWatched(@PathVariable String Operation,@PathVariable String InternalOperation) {
 		 str="";
-		 String RESOURCE_URL_TPL ="https://analytics.api.brightcove.com/v1/data?accounts=6005208615001&dimensions=country&fields=country_name";
+		 String RESOURCE_URL_TPL ="https://analytics.api.brightcove.com/v1/data?accounts=6005208615001&dimensions="+InternalOperation+"&fields="+Operation;
 		 try {
 			 
 			 AcccesTokenRequest ac=new AcccesTokenRequest();
