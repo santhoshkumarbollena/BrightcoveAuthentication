@@ -18,37 +18,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nimbusds.oauth2.sdk.AccessTokenResponse;
+
 
 
 @RestController
 public class ControllerForSecurity {
-	public String tokenreqUrl="https://oauth.brightcove.com/v4/access_token";
-	public String CLIENT_ID = "b8ff7dea-e8ab-48fe-aa70-54221e46b705";
-	public String CLIENT_SECRET ="grk1DbNkrMSe5ZtTF0rFAAl3wVh9MxgB8UJ4rR7ADBWmYU-twNTEMDc-zWHvIoqHHp4BSdYg-yfD82fyEtCWRg";
-	public String ACCOUNT_ID = "6005208615001";
-	 public String RESOURCE_URL_TPL =
-	            "https://players.api.brightcove.com/v2/accounts/6005208615001/players";
+	
+	 
 	 String str="";
+	 
 	 @GetMapping(value="GetAllPlayers",produces=MediaType.APPLICATION_JSON_VALUE)
-	public String  GetAllPlayers() {
+	 public String  GetAllPlayers() {
+		 String RESOURCE_URL_TPL ="https://players.api.brightcove.com/v2/accounts/6005208615001/players";
 		 try {
-	            OAuthClient client = new OAuthClient(new URLConnectionClient());
-
-	            OAuthClientRequest request =
-	                    OAuthClientRequest.tokenLocation(tokenreqUrl)
-	                    .setGrantType(GrantType.CLIENT_CREDENTIALS)
-	                    .setClientId(CLIENT_ID)
-	                    .setClientSecret(CLIENT_SECRET)
-	                    .buildQueryMessage();
-
-	            String token =
-	                    client.accessToken(request, OAuthJSONAccessTokenResponse.class)
-	                    .getAccessToken();
-
-	            String resourceUrl = RESOURCE_URL_TPL.replace(":account-id", ACCOUNT_ID);
+			 
+			 AcccesTokenRequest ac=new AcccesTokenRequest();
+			 ac.getAccessTOkenMethod();
+	            String resourceUrl = RESOURCE_URL_TPL.replace(":account-id", ac.ACCOUNT_ID);
 	            HttpURLConnection resource_cxn =
 	                    (HttpURLConnection)(new URL(resourceUrl).openConnection());
-	            resource_cxn.addRequestProperty("Authorization", "Bearer " + token);
+	            resource_cxn.addRequestProperty("Authorization", "Bearer " + ac.token);
 
 	            InputStream resource = resource_cxn.getInputStream();
 
@@ -66,4 +56,33 @@ public class ControllerForSecurity {
 		 
 		 return str;
 	}
+	 @GetMapping(value="GetCountryName",produces=MediaType.APPLICATION_JSON_VALUE)
+	 public String getCountryNamesWherevideoBeingWatched() {
+		 str="";
+		 String RESOURCE_URL_TPL ="https://analytics.api.brightcove.com/v1/data?accounts=6005208615001&dimensions=country&fields=country_name";
+		 try {
+			 
+			 AcccesTokenRequest ac=new AcccesTokenRequest();
+			 ac.getAccessTOkenMethod();
+	            String resourceUrl = RESOURCE_URL_TPL.replace(":account-id", ac.ACCOUNT_ID);
+	            HttpURLConnection resource_cxn =
+	                    (HttpURLConnection)(new URL(resourceUrl).openConnection());
+	            resource_cxn.addRequestProperty("Authorization", "Bearer " + ac.token);
+
+	            InputStream resource = resource_cxn.getInputStream();
+
+	            
+	            BufferedReader r = new BufferedReader(new InputStreamReader(resource, "UTF-8"));
+	            String line = null;
+	            
+	            while ((line = r.readLine()) != null) {
+	                System.out.println(line);
+	                str=str+line;
+	            }
+	        } catch (Exception exn) {
+	            exn.printStackTrace();
+	        }
+		 return str;
+	 }	 
+	 
 }
